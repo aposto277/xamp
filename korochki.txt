@@ -1,0 +1,391 @@
+
+================================================================================
+ФАЙЛ: korochki/index.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Корочки.есть</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="index">
+<header><strong>Корочки.есть</strong><nav><a href="login.html">Вход</a><a href="register.html">Регистрация</a></nav></header>
+<main>
+<div class="box">
+<h2>Онлайн-курсы ДПО</h2>
+<p>Запись на обучение</p>
+<a class="btn" href="register.html">Начать</a>
+</div>
+<div class="box" style="margin-top:16px">
+<h3>Направления</h3>
+<div class="slider">
+<button type="button" class="prev" id="prev">&#10094;</button>
+<div class="track" id="track">
+<div class="slide" style="background:#4a7cff">Программирование</div>
+<div class="slide" style="background:#9b59b6">Веб-дизайн</div>
+<div class="slide" style="background:#27ae60">Базы данных</div>
+<div class="slide" style="background:#e67e22">Сертификат</div>
+</div>
+<button type="button" class="next" id="next">&#10095;</button>
+</div>
+</div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
+
+================================================================================
+ФАЙЛ: korochki/register.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Регистрация</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="register">
+<header><strong>Корочки.есть</strong><nav><a href="index.html">Главная</a></nav></header>
+<main class="box">
+<h2>Регистрация</h2>
+<form id="f">
+<label>Логин<input name="login"><span class="err" data-f="login"></span></label>
+<label>Пароль<input type="password" name="password"><span class="err" data-f="password"></span></label>
+<label>ФИО<input name="fullName"><span class="err" data-f="fullName"></span></label>
+<label>Телефон<input name="phone" placeholder="8(999)123-45-67"><span class="err" data-f="phone"></span></label>
+<label>Email<input name="email"><span class="err" data-f="email"></span></label>
+<button type="submit">Зарегистрироваться</button>
+<p><a href="login.html">Уже есть аккаунт? Вход</a></p>
+</form>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
+
+================================================================================
+ФАЙЛ: korochki/login.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вход</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="login">
+<header><strong>Корочки.есть</strong><nav><a href="index.html">Главная</a></nav></header>
+<main class="box">
+<h2>Авторизация</h2>
+<form id="f">
+<label>Логин<input name="login"><span class="err" data-f="login"></span></label>
+<label>Пароль<input type="password" name="password"><span class="err" data-f="password"></span></label>
+<button type="submit">Войти</button>
+<p><a href="register.html">Еще не зарегистрированы? Регистрация</a></p>
+</form>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
+
+================================================================================
+ФАЙЛ: korochki/applications.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мои заявки</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="apps">
+<header><strong>Корочки.есть</strong><nav><a href="new-application.html">Новая заявка</a><a href="#" class="logout">Выход</a></nav></header>
+<main class="box">
+<h2>Мои заявки</h2>
+<div id="list"></div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
+
+================================================================================
+ФАЙЛ: korochki/new-application.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Новая заявка</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="newapp">
+<header><strong>Корочки.есть</strong><nav><a href="applications.html">Заявки</a><a href="#" class="logout">Выход</a></nav></header>
+<main class="box">
+<h2>Новая заявка</h2>
+<form id="f">
+<label>Курс
+<select name="course">
+<option value="">—</option>
+<option>Основы алгоритмизации и программирования</option>
+<option>Основы веб-дизайна</option>
+<option>Основы проектирования баз данных</option>
+</select><span class="err" data-f="course"></span></label>
+<label>Дата (ДД.ММ.ГГГГ)<input name="startDate" placeholder="01.09.2026"><span class="err" data-f="startDate"></span></label>
+<label>Оплата
+<select name="payment">
+<option value="">—</option>
+<option value="cash">Наличными</option>
+<option value="phone">Переводом по телефону</option>
+</select><span class="err" data-f="payment"></span></label>
+<button type="submit">Отправить</button>
+</form>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
+
+================================================================================
+ФАЙЛ: korochki/admin.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="admin">
+<header><strong>Админ-панель</strong><nav><a href="#" class="logout">Выход</a></nav></header>
+<main class="box">
+<h2>Заявки</h2>
+<div class="tools">
+<label>Статус<select id="sf"><option value="all">Все</option><option value="new">Новая</option><option value="in_progress">Идет обучение</option><option value="completed">Завершено</option></select></label>
+<label>Логин<input id="lf"></label>
+</div>
+<div id="tbl"></div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
+
+================================================================================
+ФАЙЛ: korochki/css/style.css
+================================================================================
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f0f3fa; color: #222; line-height: 1.4; }
+header { background: #2b59c3; color: #fff; padding: 10px 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+header a { color: #fff; margin-left: 10px; }
+main { max-width: 800px; margin: 20px auto; padding: 0 12px 30px; }
+.box { background: #fff; padding: 20px; border-radius: 8px; }
+label { display: block; margin-bottom: 10px; }
+input, select, textarea { width: 100%; margin-top: 4px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+.err { color: #c00; font-size: 12px; min-height: 14px; display: block; }
+.btn, button { background: #2b59c3; color: #fff; border: 0; padding: 8px 14px; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 8px; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { border: 1px solid #ddd; padding: 6px; font-size: 14px; text-align: left; }
+th { background: #e8eeff; }
+.tools { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.tools label { flex: 1; min-width: 140px; }
+.slider { position: relative; overflow: hidden; margin-top: 10px; border-radius: 6px; }
+.track { display: flex; transition: transform .4s; }
+.slide { min-width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; }
+.slider button { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,.4); border-radius: 50%; width: 32px; height: 32px; padding: 0; margin: 0; }
+.slider .prev { left: 6px; }
+.slider .next { right: 6px; }
+@media (max-width: 390px) { header { flex-direction: column; } .box { padding: 14px; } .slide { height: 150px; font-size: 18px; } }
+
+================================================================================
+ФАЙЛ: korochki/js/app.js
+================================================================================
+
+var US = 'korochki_users', AP = 'korochki_apps', SE = 'korochki_session';
+function getData(k) { return JSON.parse(localStorage.getItem(k) || '[]'); }
+function setData(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function sess() { var s = sessionStorage.getItem(SE); return s ? JSON.parse(s) : null; }
+function setS(v) { sessionStorage.setItem(SE, JSON.stringify(v)); }
+function findUser(l) { return getData(US).find(function (u) { return u.login === l; }); }
+function st(s) { return { new: 'Новая', in_progress: 'Идет обучение', completed: 'Обучение завершено' }[s] || s; }
+
+function showErr(form, err) {
+  form.querySelectorAll('.err').forEach(function (e) { e.textContent = ''; });
+  for (var k in err) { var el = form.querySelector('.err[data-f="' + k + '"]'); if (el) el.textContent = err[k]; }
+}
+
+function checkReg(d) {
+  var e = {};
+  if (!/^[a-zA-Z0-9]{6,}$/.test(d.login)) e.login = 'Логин: латиница, от 6 символов';
+  if (d.password.length < 8) e.password = 'Пароль: от 8 символов';
+  if (!/^[А-Яа-яЁё\s]+$/.test(d.fullName)) e.fullName = 'ФИО: кириллица';
+  if (!/^8\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(d.phone)) e.phone = 'Телефон: 8(XXX)XXX-XX-XX';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) e.email = 'Неверный email';
+  return e;
+}
+
+function checkApp(d) {
+  var e = {};
+  if (!d.course) e.course = 'Выберите курс';
+  if (!/^\d{2}\.\d{2}\.\d{4}$/.test(d.startDate)) e.startDate = 'Дата: ДД.ММ.ГГГГ';
+  if (!d.payment) e.payment = 'Выберите оплату';
+  return e;
+}
+
+document.querySelectorAll('.logout').forEach(function (a) {
+  a.onclick = function (e) { e.preventDefault(); sessionStorage.removeItem(SE); location.href = 'login.html'; };
+});
+
+var page = document.body.dataset.page;
+
+if (page === 'register') {
+  document.getElementById('f').onsubmit = function (e) {
+    e.preventDefault();
+    var d = { login: this.login.value.trim(), password: this.password.value, fullName: this.fullName.value.trim(), phone: this.phone.value.trim(), email: this.email.value.trim() };
+    var err = checkReg(d);
+    showErr(this, err);
+    if (Object.keys(err).length || findUser(d.login)) { if (!err.login && findUser(d.login)) showErr(this, { login: 'Логин занят' }); return; }
+    var u = getData(US); u.push(d); setData(US, u);
+    location.href = 'login.html';
+  };
+}
+
+if (page === 'login') {
+  document.getElementById('f').onsubmit = function (e) {
+    e.preventDefault();
+    var l = this.login.value.trim(), p = this.password.value, err = {};
+    if (!l) err.login = 'Введите логин';
+    if (!p) err.password = 'Введите пароль';
+    showErr(this, err);
+    if (Object.keys(err).length) return;
+    if (l === 'Admin' && p === 'KorokNET') { setS({ login: 'Admin', role: 'admin' }); location.href = 'admin.html'; return; }
+    var u = findUser(l);
+    if (!u || u.password !== p) { showErr(this, { login: 'Неверный логин или пароль' }); return; }
+    setS({ login: u.login, role: 'user', fullName: u.fullName });
+    location.href = 'applications.html';
+  };
+}
+
+if (page === 'apps') {
+  var s = sess();
+  if (!s || s.role !== 'user') location.href = 'login.html';
+  function draw() {
+    var box = document.getElementById('list'), apps = getData(AP).filter(function (a) { return a.userLogin === s.login; });
+    if (!apps.length) { box.innerHTML = '<p>Нет заявок. <a href="new-application.html">Создать</a></p>'; return; }
+    var h = '<table><tr><th>Курс</th><th>Дата</th><th>Статус</th><th>Отзыв</th></tr>';
+    apps.forEach(function (a, i) {
+      h += '<tr><td>' + a.course + '</td><td>' + a.startDate + '</td><td>' + st(a.status) + '</td><td>';
+      if (a.status === 'completed') {
+        h += a.review ? a.review : '<form data-i="' + i + '"><textarea required></textarea><button>OK</button></form>';
+      } else h += 'После завершения курса';
+      h += '</td></tr>';
+    });
+    box.innerHTML = h + '</table>';
+    box.querySelectorAll('form').forEach(function (f) {
+      f.onsubmit = function (e) {
+        e.preventDefault();
+        var t = this.querySelector('textarea').value.trim(), all = getData(AP), mine = all.filter(function (x) { return x.userLogin === s.login; });
+        all.find(function (x) { return x.id === mine[this.dataset.i].id; }.bind(this)).review = t;
+        setData(AP, all); draw();
+      };
+    });
+  }
+  draw();
+}
+
+if (page === 'newapp') {
+  if (!sess() || sess().role !== 'user') location.href = 'login.html';
+  document.getElementById('f').onsubmit = function (e) {
+    e.preventDefault();
+    var d = { course: this.course.value, startDate: this.startDate.value.trim(), payment: this.payment.value }, err = checkApp(d);
+    showErr(this, err);
+    if (Object.keys(err).length) return;
+    var apps = getData(AP), id = apps.length ? apps[apps.length - 1].id + 1 : 1;
+    apps.push({ id: id, userLogin: sess().login, course: d.course, startDate: d.startDate, payment: d.payment, status: 'new', review: '' });
+    setData(AP, apps);
+    location.href = 'applications.html';
+  };
+}
+
+if (page === 'admin') {
+  var s = sess();
+  if (!s || s.role !== 'admin') location.href = 'login.html';
+  function draw() {
+    var stf = document.getElementById('sf').value, lf = document.getElementById('lf').value.toLowerCase();
+    var apps = getData(AP).filter(function (a) {
+      return (stf === 'all' || a.status === stf) && (!lf || a.userLogin.toLowerCase().indexOf(lf) >= 0);
+    });
+    var h = '<table><tr><th>ID</th><th>Логин</th><th>Курс</th><th>Дата</th><th>Статус</th><th></th></tr>';
+    apps.forEach(function (a) {
+      h += '<tr><td>' + a.id + '</td><td>' + a.userLogin + '</td><td>' + a.course + '</td><td>' + a.startDate + '</td><td>' + st(a.status) + '</td><td>';
+      h += '<select data-id="' + a.id + '"><option value="new">Новая</option><option value="in_progress">Идет обучение</option><option value="completed">Обучение завершено</option></select></td></tr>';
+    });
+    document.getElementById('tbl').innerHTML = (apps.length ? h + '</table>' : '<p>Нет заявок</p>');
+    document.querySelectorAll('select[data-id]').forEach(function (sel) {
+      sel.value = apps.find(function (a) { return a.id == sel.dataset.id; }).status;
+      sel.onchange = function () {
+        var all = getData(AP), a = all.find(function (x) { return x.id == this.dataset.id; }.bind(this));
+        if (a) a.status = this.value;
+        setData(AP, all);
+      };
+    });
+  }
+  document.getElementById('sf').onchange = draw;
+  document.getElementById('lf').oninput = draw;
+  draw();
+}
+
+if (page === 'index') {
+  var track = document.getElementById('track'), i = 0, n = track.children.length;
+  function go(x) { i = (x + n) % n; track.style.transform = 'translateX(-' + i * 100 + '%)'; }
+  document.getElementById('prev').onclick = function () { go(i - 1); };
+  document.getElementById('next').onclick = function () { go(i + 1); };
+  setInterval(function () { go(i + 1); }, 3000);
+}
+
+================================================================================
+ФАЙЛ: korochki/sql/schema.sql
+================================================================================
+
+CREATE DATABASE IF NOT EXISTS korochki;
+USE korochki;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  login VARCHAR(50) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  full_name VARCHAR(150) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  email VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE applications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  course_name VARCHAR(200) NOT NULL,
+  start_date DATE NOT NULL,
+  payment_method ENUM('cash','phone') NOT NULL,
+  status ENUM('new','in_progress','completed') DEFAULT 'new',
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE reviews (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  application_id INT NOT NULL,
+  text TEXT NOT NULL,
+  FOREIGN KEY (application_id) REFERENCES applications(id)
+);
+
+================================================================================
+КОНЕЦ ФАЙЛА
+================================================================================
