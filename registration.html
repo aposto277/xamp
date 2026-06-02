@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="{{url_for('static', filename='/style.css')}}">
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+</head>
+<body>
+    <form method="POST">
+        <input name="login" placeholder="login" pattern="[A-Za-z0-9]{6,}" required>
+        <input type="password" name="password" placeholder="password" minlength="8" required>
+        <input name="fio" pattern="[А-Яа-яЁё ]+" placeholder="your name" required>
+        <input name="phone" placeholder="your phone" pattern="8\([0-9]{3}\)[0-9]{3}-[0-9]{2}-[0-9]{2}" required>
+        <input type="email" name="email" placeholder="your email" required>
+        <button>Зарегестрироваться</button>
+    </form>
+    <p>Уже есть аккаунт? <a href="/login">Войти</a></p>
+</body>
+</html>

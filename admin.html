@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="{{url_for('static', filename='/style.css')}}">
+
+<h2>Admin panel</h2>
+
+{% for a in apps %}
+<p>
+    {{ a[1] }} - {{ a[4] }}
+    <a href="/admin/{{ a[0] }}/Идет обучение">Start</a>
+    <a href="/admin/{{ a[0] }}/обучение завершено">End</a>
+</p>
+{% endfor %}

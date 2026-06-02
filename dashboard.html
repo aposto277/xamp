@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <script src="{{ url_for('static', filename='js/slider.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='/style.css')}}">
+</head>
+<body>
+    <div class="slider">
+        <img id="slide" src="{{ url_for('static', filename='img/jpg1.jpg')}}">
+
+    <button onclick="prevSlide()">
+        <-
+    </button>
+    <button onclick="nextSlide()">
+        ->
+    </button>
+    </div>
+
+
+    <form method="POST" action="/create">
+        <select name="course_name">
+            <option>
+                Основы алгоритмизации и программирования
+            </option>
+
+            <option>
+                Основы веб-дизайна
+            </option>
+
+            <option>
+                Основы проектирования баз данных
+            </option>
+        </select>
+
+        <input name="start_date" type="date">
+
+        <select name="payment_method">
+            <option>Наличные</option>
+            <option>Перевод</option>
+        </select>
+        <button>Отправить</button>
+    </form>
+
+    {% if completed%}
+        <form method="post" action="/review">
+            <input name="отзыв">
+            <button>Отправить отзыв</button>
+        </form>
+    {% endif %}
+
+{% for a in apps %}
+<p>{{ a[1]}} - {{ a[4] }}</p>
+{% endfor %}
+</body>
+</html>
