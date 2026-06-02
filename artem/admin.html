@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Корочки.есть</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        /* Основной контейнер — фиксированная ширина */
+        .dashboard {
+            max-width: 1400px;
+            width: 95%;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Заголовок */
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Навигация */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #007bff;
+            margin-left: 15px;
+        }
+        .logout {
+            color: #dc3545;
+        }
+
+        /* Панель фильтров */
+        .filter-bar {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .filter-bar a {
+            margin-right: 15px;
+            text-decoration: none;
+            cursor: pointer;
+            color: #007bff;
+        }
+        .filter-bar a.active {
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        /* КОНТЕЙНЕР С ПРОКРУТКОЙ ДЛЯ ТАБЛИЦЫ */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: visible;
+            margin-top: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* ТАБЛИЦА — ФИКСИРОВАННАЯ ШИРИНА КОЛОНОК */
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        /* Фиксированная ширина для каждой колонки */
+        th:nth-child(1) { width: 50px; }   /* ID */
+        th:nth-child(2) { width: 130px; }  /* Пользователь */
+        th:nth-child(3) { width: 150px; }  /* Контакт */
+        th:nth-child(4) { width: 120px; }  /* Курс */
+        th:nth-child(5) { width: 100px; }  /* Дата */
+        th:nth-child(6) { width: 90px; }   /* Оплата */
+        th:nth-child(7) { width: 120px; }  /* Статус */
+        th:nth-child(8) { width: 180px; }  /* Отзыв */
+        th:nth-child(9) { width: 160px; }  /* Действия */
+
+        /* Применяем ту же ширину для ячеек тела таблицы */
+        td:nth-child(1) { width: 50px; }
+        td:nth-child(2) { width: 130px; }
+        td:nth-child(3) { width: 150px; }
+        td:nth-child(4) { width: 120px; }
+        td:nth-child(5) { width: 100px; }
+        td:nth-child(6) { width: 90px; }
+        td:nth-child(7) { width: 120px; }
+        td:nth-child(8) { width: 180px; }
+        td:nth-child(9) { width: 160px; }
+
+        th, td {
+            padding: 10px 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+
+        /* Ячейка с отзывом */
+        .review-cell {
+            max-width: 180px;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        /* Кнопки действий */
+        .status-btn {
+            padding: 4px 8px;
+            margin: 2px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .status-btn:hover {
+            background: #e0a800;
+        }
+
+        /* Сообщение о загрузке */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        /* Адаптация для маленьких экранов */
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 15px;
+                width: 98%;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            .nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav div {
+                text-align: right;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="nav">
+        <span>Панель администратора</span>
+        <div>
+            <a href="main_page.html">Личный кабинет</a>
+            <a href="#" id="logoutBtn" class="logout">Выход</a>
+        </div>
+    </div>
+
+    <h1>Управление заявками</h1>
+
+    <div class="filter-bar" id="filterBar">
+        <a href="#" data-status="all">Все</a>
+        <a href="#" data-status="Новая">Новая</a>
+        <a href="#" data-status="Идет обучение">Идет обучение</a>
+        <a href="#" data-status="Обучение завершено">Завершено</a>
+    </div>
+
+    <!-- Обёртка с прокруткой -->
+    <div class="table-wrapper">
+        <div id="applicationsTable" class="loading">Загрузка...</div>
+    </div>
+</div>
+
+<script>
+    let currentStatus = 'all';
+
+    // Проверка прав администратора
+    async function checkAdmin() {
+        const res = await fetch('/api/check-auth');
+        const data = await res.json();
+        if (!data.authenticated || !data.isAdmin) {
+            window.location.href = 'index.html';
+        }
+    }
+
+    // Загрузка всех заявок
+    async function loadApplications() {
+        const container = document.getElementById('applicationsTable');
+        container.innerHTML = '<div class="loading">Загрузка...</div>';
+
+        const res = await fetch(`/api/all-applications?status=${currentStatus}`);
+        const apps = await res.json();
+
+        if (apps.error) {
+            container.innerHTML = `<p style="color:red; text-align:center">${apps.error}</p>`;
+            return;
+        }
+
+        if (apps.length === 0) {
+            container.innerHTML = '<p style="text-align:center">Нет заявок</p>';
+            return;
+        }
+
+        let html = `<table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Пользователь</th>
+                        <th>Контакт</th>
+                        <th>Курс</th>
+                        <th>Дата</th>
+                        <th>Оплата</th>
+                        <th>Статус</th>
+                        <th>Отзыв</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        for (const app of apps) {
+            html += `<tr>
+                    <td>${app.id}</td>
+                    <td>${escapeHtml(app.fio)}<br><small>${escapeHtml(app.login)}</small></td>
+                    <td><small>${escapeHtml(app.email)}<br>${escapeHtml(app.phone)}</small></td>
+                    <td>${escapeHtml(app.course_name)}</td>
+                    <td>${formatDate(app.start_date)}</td>
+                    <td>${app.payment_method === 'cash' ? 'Наличными' : 'Перевод'}</td>
+                    <td><strong style="color:${getStatusColor(app.status)}">${escapeHtml(app.status)}</strong></td>
+                    <td class="review-cell">${app.review ? escapeHtml(app.review) : '—'}</td>
+                    <td>`;
+
+            if (app.status !== 'Идет обучение') {
+                html += `<button class="status-btn" onclick="changeStatus(${app.id}, 'Идет обучение')">Идет обучение</button> `;
+            }
+            if (app.status !== 'Обучение завершено') {
+                html += `<button class="status-btn" onclick="changeStatus(${app.id}, 'Обучение завершено')">Завершить</button>`;
+            }
+
+            html += `</td>`;
+        }
+        html += `</tbody>
+             </table>`;
+        container.innerHTML = html;
+    }
+
+    // Смена статуса
+    async function changeStatus(appId, newStatus) {
+        const res = await fetch('/api/change-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ app_id: appId, status: newStatus })
+        });
+        const data = await res.json();
+        if (data.success) {
+            loadApplications();
+        } else {
+            alert(data.error);
+        }
+    }
+
+    // Цвет статуса
+    function getStatusColor(status) {
+        switch(status) {
+            case 'Новая': return '#dc3545';
+            case 'Идет обучение': return '#ffc107';
+            case 'Обучение завершено': return '#28a745';
+            default: return '#333';
+        }
+    }
+
+    // Форматирование даты
+    function formatDate(dateStr) {
+        if (!dateStr) return '—';
+        try {
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('ru-RU');
+        } catch(e) {
+            return dateStr;
+        }
+    }
+
+    // Фильтрация
+    document.querySelectorAll('#filterBar a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentStatus = link.dataset.status;
+            document.querySelectorAll('#filterBar a').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+            loadApplications();
+        });
+    });
+
+    // Выход
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/api/logout');
+        window.location.href = 'index.html';
+    });
+
+    // Защита от XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Запуск
+    checkAdmin();
+    loadApplications();
+</script>
+</body>
+</html>

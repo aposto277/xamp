@@ -1,0 +1,75 @@
+/* Общие стили для всех страниц */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Стили для форм входа и регистрации */
+.login {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login_block {
+    background: white;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 380px;
+}
+
+.login_block > p {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login_input input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.login_input button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.login_input button:hover {
+    background: #0056b3;
+}
+
+.login_input p {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login_input a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login_input a:hover {
+    text-decoration: underline;
+}

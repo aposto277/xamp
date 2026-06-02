@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - Корочки.есть</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        .dashboard {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #007bff;
+            margin-left: 15px;
+        }
+        h2 {
+            margin: 20px 0 15px;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .review-form {
+            display: inline-flex;
+            gap: 5px;
+        }
+        .review-form input {
+            width: 120px;
+            margin: 0;
+            display: inline-block;
+        }
+        .review-form button {
+            width: auto;
+            display: inline-block;
+            padding: 8px 12px;
+        }
+        .logout {
+            color: #dc3545;
+        }
+        .admin-link {
+            background: #007bff;
+            color: white !important;
+            padding: 5px 12px;
+            text-decoration: none;
+        }
+        .error-message {
+            color: #dc3545;
+            background: #ffe6e6;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="nav">
+        <span>Добро пожаловать, <span id="userName"></span>!</span>
+        <div>
+            <a href="#" id="adminLink" style="display:none" class="admin-link">Админ-панель</a>
+            <a href="#" id="logoutBtn" class="logout">Выход</a>
+        </div>
+    </div>
+
+    <div id="formError" class="error-message" style="display:none"></div>
+
+    <h2>Новая заявка</h2>
+    <form id="applicationForm">
+        <input type="text" id="courseName" placeholder="Название курса" required>
+        <input type="date" id="startDate" required>
+        <select id="paymentMethod" required>
+            <option value="cash">Наличными</option>
+            <option value="transfer">Перевод по номеру телефона</option>
+        </select>
+        <button type="submit">Отправить заявку</button>
+    </form>
+
+    <h2>Мои заявки</h2>
+    <div id="applicationsList">Загрузка...</div>
+</div>
+
+<script>
+    // === УСТАНОВКА ОГРАНИЧЕНИЙ НА ДАТУ ===
+    function setDateLimits() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+
+        // Минимум: сегодня
+        const minDate = `${year}-${month}-${day}`;
+
+        // Максимум: сегодня + 2 года (до 31 декабря)
+        const maxDate = `${year + 2}-12-31`;
+
+        const dateInput = document.getElementById('startDate');
+        if (dateInput) {
+            dateInput.setAttribute('min', minDate);
+            dateInput.setAttribute('max', maxDate);
+        }
+    }
+
+    // Проверка авторизации
+    async function checkAuth() {
+        const res = await fetch('/api/check-auth');
+        const data = await res.json();
+        if (!data.authenticated) {
+            window.location.href = 'index.html';
+        }
+        document.getElementById('userName').textContent = data.fio || 'Пользователь';
+        if (data.isAdmin) {
+            const adminLink = document.getElementById('adminLink');
+            adminLink.style.display = 'inline-block';
+            adminLink.href = 'admin.html';
+        }
+        return data.isAdmin;
+    }
+
+    // Загрузка заявок
+    async function loadApplications() {
+        const res = await fetch('/api/my-applications');
+        const apps = await res.json();
+        const container = document.getElementById('applicationsList');
+
+        if (apps.length === 0) {
+            container.innerHTML = '<p>У вас пока нет заявок</p>';
+            return;
+        }
+
+        let html = `<table>
+                <thead>
+                    <tr>
+                        <th>Курс</th>
+                        <th>Дата</th>
+                        <th>Оплата</th>
+                        <th>Статус</th>
+                        <th>Отзыв</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        for (const app of apps) {
+            html += `<tr>
+                    <td>${escapeHtml(app.course_name)}</td>
+                    <td>${formatDate(app.start_date)}</td>
+                    <td>${app.payment_method === 'cash' ? 'Наличными' : 'Перевод'}</td>
+                    <td>${app.status}</td>
+                    <td>`;
+
+            if (app.status === 'Обучение завершено' && !app.review) {
+                html += `<form class="review-form" onsubmit="addReview(event, ${app.id})">
+                        <input type="text" id="review_${app.id}" placeholder="Ваш отзыв" required>
+                        <button type="submit">Добавить</button>
+                    </form>`;
+            } else if (app.review) {
+                html += escapeHtml(app.review);
+            } else {
+                html += '—';
+            }
+
+            html += `</td>
+                </tr>`;
+        }
+        html += `</tbody>
+             </table>`;
+        container.innerHTML = html;
+    }
+
+    // Добавление отзыва
+    async function addReview(event, appId) {
+        event.preventDefault();
+        const review = document.getElementById(`review_${appId}`).value;
+        await fetch('/api/add-review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ app_id: appId, review })
+        });
+        loadApplications();
+    }
+
+    // Создание заявки
+    document.getElementById('applicationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const courseName = document.getElementById('courseName').value;
+        const startDate = document.getElementById('startDate').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const errorDiv = document.getElementById('formError');
+
+        // Дополнительная проверка даты перед отправкой
+        const selectedDate = new Date(startDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+            errorDiv.textContent = 'Дата не может быть в прошлом';
+            errorDiv.style.display = 'block';
+            setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+            return;
+        }
+
+        const response = await fetch('/api/create-application', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                course_name: courseName,
+                start_date: startDate,
+                payment_method: paymentMethod
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+            errorDiv.textContent = result.error;
+            errorDiv.style.display = 'block';
+            setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+        } else {
+            document.getElementById('applicationForm').reset();
+            setDateLimits(); // восстановить ограничения после сброса
+            loadApplications();
+        }
+    });
+
+    // Выход
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/api/logout');
+        window.location.href = 'index.html';
+    });
+
+    // Форматирование даты
+    function formatDate(dateStr) {
+        if (!dateStr) return '—';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('ru-RU');
+    }
+
+    // Защита от XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Запуск
+    setDateLimits();
+    checkAuth();
+    loadApplications();
+</script>
+</body>
+</html>

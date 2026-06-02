@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Корочки.есть</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        .error-message {
+            color: #dc3545;
+            background: #ffe6e6;
+            padding: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .success-message {
+            color: #28a745;
+            background: #e6ffe6;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .login_block {
+            width: 400px;
+        }
+        .login_input input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .login_input button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .login_input button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="login">
+    <div class="login_block">
+        <p>Регистрация</p>
+        <div class="login_input">
+            <div id="errorsContainer"></div>
+            <input type="text" id="login" placeholder="Логин (латиница, мин 6)">
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Пароль (мин 8)">
+            <input type="text" id="fio" placeholder="ФИО (кириллица)">
+            <input type="text" id="phone" placeholder="Телефон +7(999)123-45-67 или 8(999)123-45-67">
+            <button id="registerBtn">Зарегистрироваться</button>
+            <p>Уже есть аккаунт? <a href="index.html">Войти</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+        const data = {
+            login: document.getElementById('login').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            fio: document.getElementById('fio').value,
+            phone: document.getElementById('phone').value
+        };
+
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        const errorsContainer = document.getElementById('errorsContainer');
+
+        if (result.success) {
+            errorsContainer.innerHTML = `<div class="success-message">${result.message} Перенаправление...</div>`;
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } else {
+            errorsContainer.innerHTML = result.errors.map(e =>
+                `<div class="error-message">${e}</div>`
+            ).join('');
+        }
+    });
+</script>
+</body>
+</html>

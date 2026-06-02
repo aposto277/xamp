@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Корочки.есть</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        .error-message {
+            color: #dc3545;
+            background: #ffe6e6;
+            padding: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="login">
+    <div class="login_block">
+        <p>Вход</p>
+        <div class="login_input">
+            <div id="errorMsg" class="error-message" style="display:none"></div>
+            <input type="text" id="name_or_email" placeholder="Логин или Email">
+            <input type="password" id="password" placeholder="Пароль">
+            <button id="loginBtn">Войти</button>
+            <p>Нет аккаунта? <a href="registr.html">Зарегистрироваться</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const login_or_email = document.getElementById('name_or_email').value;
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('errorMsg');
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ login_or_email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            if (data.isAdmin) {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'main_page.html';
+            }
+        } else {
+            errorDiv.textContent = data.error;
+            errorDiv.style.display = 'block';
+        }
+    });
+
+    // Вход по клавише Enter
+    document.getElementById('password').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('loginBtn').click();
+        }
+    });
+</script>
+</body>
+</html>
